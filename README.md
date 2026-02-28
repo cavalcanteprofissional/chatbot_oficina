@@ -177,58 +177,40 @@ chatbot_oficina/
 
 ## Fluxo de Dados
 
+```mermaid
+graph TD
+    A[Usuário] --> B[Streamlit UI]
+    B --> C[Guards Rails]
+    
+    C -->|Válido| D[RAG Pipeline]
+    C -->|Inválido| E[Msg de Erro]
+    E --> B
+    
+    D --> F[FAISS Embeddings]
+    F --> G[Ollama Cloud LLM]
+    G --> H[Resposta Gerada]
+    
+    H --> I[Streamlit UI]
+    I --> J[Usuário]
+    
+    J --> K{Cliente<br/>Cadastrado?}
+    K -->|Sim| L[Salvar no<br/>Supabase]
+    K -->|Não| M[Não salvar]
+    
+    style A fill:#f9f,stroke:#333
+    style G fill:#9ff,stroke:#333
+    style L fill:#ff9,stroke:#333
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         FLUXO DE DADOS                                   │
-└─────────────────────────────────────────────────────────────────────────┘
 
-┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-│  Usuário │────▶│ Streamlit│────▶│  Guards  │────▶│   RAG    │
-│  (Input) │     │  (UI)    │     │ (Filter) │     │ (LLM)    │
-└──────────┘     └──────────┘     └──────────┘     └──────────┘
-       │                                                      │
-       │                                                      ▼
-       │                                              ┌──────────┐
-       │                                              │  Ollama  │
-       │                                              │  Cloud   │
-       │                                              └──────────┘
-       │                                                      │
-       ▼                                                      ▼
-┌──────────┐     ┌──────────┐     ┌──────────┐     ┌──────────┐
-│  Usuário │◀────│ Streamlit│◀────│ Resposta │     │  FAISS   │
-│ (Output) │     │  (UI)   │     │ (Texto)  │     │(Embeddin)│
-└──────────┘     └──────────┘     └──────────┘     └──────────┘
-       │                                    │
-       │                                    ▼
-       │                            ┌──────────┐
-       │                            │ Supabase │
-       └───────────────────────────▶│ (Dados)  │
-                                    └──────────┘
+### Detalhamento do Fluxo
 
-
-┌─────────────────────────────────────────────────────────────────────────┐
-│                         DETALHAMENTO                                     │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  1. USUÁRIO ENVIA MENSAGEM                                             │
-│     └──► Streamlit captura input do usuário                              │
-│                                                                         │
-│  2. GUARDS (Validação)                                                 │
-│     ├──► Topic Validator: Verifica tema (oficina automotiva)           │
-│     └──► Injection Detector: Bloqueia prompt injection                │
-│                                                                         │
-│  3. RAG (Busca + Geração)                                             │
-│     ├──► FAISS: Busca documentos similares por embeddings              │
-│     ├──► Ollama Cloud: Gera resposta com contexto                      │
-│     └──► LangChain: Orquestra todo o processo                          │
-│                                                                         │
-│  4. RESPOSTA AO USUÁRIO                                                │
-│     └──► Streamlit exibe resposta                                      │
-│                                                                         │
-│  5. PERSISTÊNCIA (Apenas clientes cadastrados)                         │
-│     └──► Supabase: Salva cliente + conversas                           │
-│                                                                         │
-└─────────────────────────────────────────────────────────────────────────┘
+| Passo | Descrição |
+|-------|-----------|
+| **1. Usuário envia mensagem** | Streamlit captura input do usuário |
+| **2. Guards (Validação)** | Topic Validator verifica tema; Injection Detector bloqueia tentativas de injection |
+| **3. RAG Pipeline** | FAISS busca documentos similares; Ollama Cloud gera resposta |
+| **4. Resposta ao usuário** | Streamlit exibe resposta |
+| **5. Persistência** | Se cliente cadastrado, salva no Supabase |
 ```
 
 ## Modelos Disponíveis
