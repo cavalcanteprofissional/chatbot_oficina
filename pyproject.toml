@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "chatbot-oficina"
+version = "0.1.0"
+description = "Chatbot de atendimento para oficina automotiva com RAG"
+authors = ["Desenvolvedor"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+langchain = "*"
+langchain-community = "*"
+langchain-text-splitters = "*"
+langchain-huggingface = "*"
+langchain-ollama = "*"
+sentence-transformers = "*"
+faiss-cpu = "*"
+streamlit = "*"
+python-dotenv = "*"
+pypdf = "*"
+supabase = "*"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "*"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

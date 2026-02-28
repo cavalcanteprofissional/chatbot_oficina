@@ -1,0 +1,44 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Distribution / packaging
+*.egg-info/
+dist/
+build/
+*.egg
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Environment variables
+.env
+.env.local
+
+# Database
+data/chroma_db/
+data/faiss_db/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Poetry
+poetry.lock
+
+# Streamlit
+.streamlit/
